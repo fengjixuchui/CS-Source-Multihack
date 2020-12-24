@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <ProjectGuid>{0e6c1514-03c3-4601-b715-683584380fda}</ProjectGuid>
+    <ProjectGuid>{853d97f2-e4e0-4748-bb5a-30843cdd2e19}</ProjectGuid>
     <RootNamespace>CS_Source_Multihack</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -94,6 +94,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)\src;$(ProjectDir)\include;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -110,6 +111,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)\src;$(ProjectDir)\include;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -128,6 +130,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)\src;$(ProjectDir)\include;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -148,6 +151,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)\src;$(ProjectDir)\include;$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -208,10 +212,9 @@
     </ClCompile>
     <ClCompile Include="src\base.cpp" />
     <ClCompile Include="src\hacks\Bunnyhop.cpp" />
-    <ClCompile Include="src\hacks\ESP_Snaplines.cpp" />
     <ClCompile Include="src\hacks\hacks.cpp" />
-    <ClCompile Include="src\hacks\RCS.cpp" />
     <ClCompile Include="src\hooks\EndScene.cpp" />
+    <ClCompile Include="src\hooks\ESP_Snaplines.cpp" />
     <ClCompile Include="src\hooks\hooks.cpp" />
     <ClCompile Include="src\hooks\WndProc.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -223,8 +226,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\base_types.h" />
-    <ClInclude Include="include\draw\draw.h" />
     <ClInclude Include="include\imgui\imconfig.h" />
     <ClInclude Include="include\imgui\imgui.h" />
     <ClInclude Include="include\imgui\imgui_impl_dx9.h" />

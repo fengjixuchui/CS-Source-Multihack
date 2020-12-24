@@ -1,35 +1,31 @@
 #include <pch.h>
 #include <base.h>
 
-void Base::Hack()
+void Base::Hacks::Run()
 {
-	Data::LocalPlayer = *(SDK::CSPlayer**)((mem::uintptr_t)Data::m_client.base + SDK::Offsets::pLocalPlayer);
-	Data::vMatrix     = *(SDK::ViewMatrix*)((mem::uintptr_t)Data::m_engine.base + SDK::Offsets::dwViewMatrix);
-	Data::ForceJump   = (int32_t*)((mem::uintptr_t)Data::m_client.base + SDK::Offsets::dwForceJump);
-	if (Data::LocalPlayer)
+	Data::Client->Update();
+	Data::Engine->Update();
+	Data::VGuiMatSurface->Update();
+
+	if (!Data::Client->LocalPlayer) return;
+
+	Hacks::Bunnyhop();
+
+	for (size_t i = 0; i < MAX_ENTITIES; i++, Data::Client->EntityList = (SDK::CSEntityList*)(&((mem::byte_t*)Data::Client->EntityList)[SDK::Offsets::dwDist]))
 	{
-		Hacks::Bunnyhop();
-		Hacks::RCS();
+		if (!(
+			Data::Client->EntityList->Current &&
+			Data::Client->EntityList->Current != Data::Client->LocalPlayer &&
+			!Data::Client->EntityList->Current->bDormant &&
+			Data::Client->EntityList->Current->iHealth > 0 &&
+			Data::Client->EntityList->Current->iTeamNum != 0 &&
+			Data::Client->EntityList->Current->iState == STATE_IS_ALIVE
+		)) continue;
 
-		Data::EntityList = (SDK::CSEntityList*)((mem::uintptr_t)Data::m_client.base + SDK::Offsets::pEntityList);
-		for (size_t i = 0; i < MAX_ENTITIES; i++, Data::EntityList = (SDK::CSEntityList*)((uintptr_t)Data::EntityList + SDK::Offsets::dwDist))
+		SDK::iVec2 EntPos2D = {};
+		if (SDK::WorldToScreen(Data::pDxDevice9, Data::Engine->ViewMatrix, &Data::Client->EntityList->Current->flPos, &EntPos2D))
 		{
-			if (Data::EntityList && Data::EntityList->Entity && Data::EntityList->Entity != Data::LocalPlayer && !Data::EntityList->Entity->Dormant && Data::EntityList->Entity->State != 0 && Data::EntityList->Entity->Health > 0 && Data::EntityList->Entity->Team != 0)
-			{
-				iVec2 Ent2DPos = {};
-				D3DXVECTOR3 pos, out;
-				pos = D3DXVECTOR3(
-					Data::EntityList->Entity->Position.x, 
-					Data::EntityList->Entity->Position.y,
-					Data::EntityList->Entity->Position.z
-				);
-
-				if (SDK::WorldToScreen(Data::pDxDevice9, Data::vMatrix, &pos, &out))
-				{
-					Ent2DPos = { (int)out.x, (int)out.y };
-					Hacks::ESP_Snaplines(Data::EntityList->Entity, Ent2DPos, Data::pDxDevice9, Data::WndWidth, Data::WndHeight);
-				}
-			}
+			Hacks::ESP_Snaplines(Data::Client->EntityList->Current, EntPos2D);
 		}
 	}
 }

@@ -2,56 +2,58 @@
 #include <base.h>
 
 //Data
-HMODULE            Base::Data::hModule    = (HMODULE)NULL;
-void*              Base::Data::pDeviceTable[D3DDEV9_LEN];
-LPDIRECT3DDEVICE9  Base::Data::pDxDevice9 = (LPDIRECT3DDEVICE9)NULL;
-HWND               Base::Data::hWindow    = (HWND)NULL;
-mem::voidptr_t     Base::Data::pEndScene  = (mem::voidptr_t)NULL;
-EndScene_t         Base::Data::oEndScene  = (EndScene_t)NULL;
-WndProc_t          Base::Data::oWndProc   = (WndProc_t)NULL;
+HMODULE           Base::Data::hModule    = (HMODULE)NULL;
+void*             Base::Data::pDeviceTable[D3DDEV9_LEN];
+LPDIRECT3DDEVICE9 Base::Data::pDxDevice9 = (LPDIRECT3DDEVICE9)NULL;
+HWND              Base::Data::hWindow    = (HWND)NULL;
+mem::voidptr_t    Base::Data::pEndScene  = (mem::voidptr_t)NULL;
+EndScene_t        Base::Data::oEndScene  = (EndScene_t)NULL;
+WndProc_t         Base::Data::oWndProc   = (WndProc_t)NULL;
 #if defined(MEM_86)
-mem::size_t        Base::Data::szEndScene = 7;
+mem::size_t       Base::Data::szEndScene = 7;
 #elif defined(MEM_64)
-mem::size_t        Base::Data::szEndScene = 15;
+mem::size_t       Base::Data::szEndScene = 15;
 #endif
-UINT               Base::Data::WmKeys[0xFF];
-bool               Base::Data::Detached   = false;
-bool               Base::Data::ToDetach   = false;
-bool               Base::Data::ShowMenu   = true;
-bool               Base::Data::InitImGui  = false;
+UINT              Base::Data::WmKeys[0xFF];
+bool              Base::Data::Detached   = false;
+bool              Base::Data::ToDetach   = false;
+bool              Base::Data::ShowMenu   = true;
+bool              Base::Data::InitImGui  = false;
 
-RECT               Base::Data::WndRect   = {};
-int                Base::Data::WndWidth  = 0;
-int                Base::Data::WndHeight = 0;
-mem::module_t      Base::Data::m_client;
-mem::module_t      Base::Data::m_engine;
-SDK::CSPlayer*     Base::Data::LocalPlayer;
-SDK::ViewMatrix    Base::Data::vMatrix;
-SDK::CSEntityList* Base::Data::EntityList;
-int32_t*           Base::Data::ForceJump;
+int  Base::Data::WndWidth = 0;
+int  Base::Data::WndHeight = 0;
+RECT Base::Data::WndRect = {};
+SDK::CSClient* Base::Data::Client = (SDK::CSClient*)NULL;
+SDK::CSEngine* Base::Data::Engine = (SDK::CSEngine*)NULL;
+SDK::CSVGUIMatSurface* Base::Data::VGuiMatSurface = (SDK::CSVGUIMatSurface*)NULL;
 
-UINT               Base::Data::Keys::Bhop = VK_SPACE;
+bool              Base::Data::Settings::EnableBunnyhop = false;
+bool              Base::Data::Settings::EnableEspSnaplines  = false;
+SDK::flColor4     Base::Data::Settings::SnaplineColorTeam   = { 0, 1, 0.5, 1 };
+SDK::flColor4     Base::Data::Settings::SnaplineColorEnemy  = { 1, 0.5, 0, 1 };
+int               Base::Data::Settings::SnaplineThickness   = 2;
 
-bool               Base::Data::Settings::EnableBunnyhop  = false;
-bool               Base::Data::Settings::EnableSnaplines = false;
-int                Base::Data::Settings::SnaplineThickness  = 1;
-flColor4           Base::Data::Settings::SnaplineColorTeam  = { 0, 1, 0.5, 1 };
-flColor4           Base::Data::Settings::SnaplineColorEnemy = { 1, 0.5, 0, 1 }; 
-bool               Base::Data::Settings::EnableRCS = false;
+UINT              Base::Data::Keys::Bhop = VK_SPACE;
+
 
 //Functions
 
 bool Base::Init()
 {
-	Data::m_client = mem::in::get_module("client.dll");
-	Data::m_engine = mem::in::get_module("engine.dll");
+	Data::Client = new SDK::CSClient();
+	Data::Engine = new SDK::CSEngine();
+	Data::VGuiMatSurface = new SDK::CSVGUIMatSurface();
 	Hooks::Init();
+
 	return true;
 }
 
 bool Base::Shutdown()
 {
 	Hooks::Shutdown();
+	delete Data::Client;
+	delete Data::Engine;
+	delete Data::VGuiMatSurface;
 	return true;
 }
 

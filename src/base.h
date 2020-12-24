@@ -11,6 +11,8 @@
 #define D3DDEV9_LEN 119
 
 #include "pch.h"
+#define MAX_ENTITIES 64
+#define STATE_IS_ALIVE 2
 
 typedef HRESULT(__stdcall* EndScene_t)(LPDIRECT3DDEVICE9);
 typedef LRESULT(CALLBACK*  WndProc_t) (HWND, UINT, WPARAM, LPARAM);
@@ -23,42 +25,37 @@ namespace Base
 	bool Init();
 	bool Shutdown();
 	bool Detach();
-	void Hack();
 
 	namespace Data
 	{
-		extern HMODULE            hModule;
-		extern LPDIRECT3DDEVICE9  pDxDevice9;
-		extern void*              pDeviceTable[D3DDEV9_LEN];
-		extern HWND               hWindow;
-		extern mem::voidptr_t     pEndScene;
-		extern EndScene_t         oEndScene;
-		extern WndProc_t          oWndProc;
-		extern mem::size_t        szEndScene;
-		extern UINT               WmKeys[0xFF];
-		extern bool               Detached;
-		extern bool               ToDetach;
-		extern bool               InitImGui;
-		extern bool               ShowMenu;
+		extern HMODULE           hModule;
+		extern LPDIRECT3DDEVICE9 pDxDevice9;
+		extern void*             pDeviceTable[D3DDEV9_LEN];
+		extern HWND              hWindow;
+		extern mem::voidptr_t    pEndScene;
+		extern EndScene_t        oEndScene;
+		extern WndProc_t         oWndProc;
+		extern mem::size_t       szEndScene;
+		extern UINT              WmKeys[0xFF];
+		extern bool              Detached;
+		extern bool              ToDetach;
+		extern bool              InitImGui;
+		extern bool              ShowMenu;
 
-		extern RECT               WndRect;
-		extern int                WndWidth;
-		extern int                WndHeight;
-		extern mem::module_t      m_client;
-		extern mem::module_t      m_engine;
-		extern SDK::CSPlayer*     LocalPlayer;
-		extern SDK::ViewMatrix    vMatrix;
-		extern int32_t*           ForceJump;
-		extern SDK::CSEntityList* EntityList;
+		extern int  WndWidth;
+		extern int  WndHeight;
+		extern RECT WndRect;
+		extern SDK::CSClient*         Client;
+		extern SDK::CSEngine*         Engine;
+		extern SDK::CSVGUIMatSurface* VGuiMatSurface;
 
 		namespace Settings
 		{
-			extern bool     EnableBunnyhop;
-			extern bool     EnableSnaplines;
-			extern int      SnaplineThickness;
-			extern flColor4 SnaplineColorTeam;
-			extern flColor4 SnaplineColorEnemy;
-			extern bool     EnableRCS;
+			extern bool EnableBunnyhop;
+			extern bool EnableEspSnaplines;
+			extern SDK::flColor4 SnaplineColorTeam;
+			extern SDK::flColor4 SnaplineColorEnemy;
+			extern int           SnaplineThickness;
 		}
 
 		namespace Keys
@@ -71,9 +68,9 @@ namespace Base
 
 	namespace Hacks
 	{
+		void Run();
 		void Bunnyhop();
-		void RCS();
-		void ESP_Snaplines(SDK::CSPlayer* ent, iVec2 Ent2DPos, LPDIRECT3DDEVICE9 pDevice, int wndWidth, int wndHeight);
+		void ESP_Snaplines(SDK::CSPlayer* ent, SDK::iVec2 EntPos2D);
 	}
 
 	namespace Hooks
